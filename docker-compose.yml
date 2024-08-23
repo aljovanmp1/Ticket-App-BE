@@ -1,0 +1,32 @@
+# Defines the containers 
+services:
+  # First project container (can be named anything)
+  web:
+    # Build parameters for the container
+    build:
+      # Declares that the container should be built from the current directory
+      context: .
+    ports:
+      # Maps ports to be accessed by the app outside of the container
+      - "4000:4000"
+    environment:
+      MIX_ENV: ""
+    develop:
+      watch:
+        - action: sync
+          path: ./lib
+          target: /app/lib
+        - action: sync
+          path: ./config
+          target: /app/config
+        - action: rebuild
+          path: mix.exs
+    # volumes:
+    #   # Files that I want to see changes to without rebuilding the container 
+    #   # This is optional, but a useful feature I've had on other projects
+    #   - ./config:/app/config
+    #   - ./lib:/app/lib
+    #   - ./priv:/app/priv
+    #   - ./mix.exs:/app/mix.exs
+    #   - ./mix.lock:/app/mix.lock
+    #   - ./test:/app/test
