@@ -65,4 +65,51 @@ defmodule Ticket_BE.Users do
       end
     end)
   end
+
+  def get_user_profile(id) do
+    sql_cmd = """
+    select
+      u.email
+      , p.birth_date
+      , p.full_name
+      , p.gender
+      , p.phone_number
+    from
+      users u
+    left join
+      profile p on u.profile_id = p.id
+    where
+      u.id = $1
+    """
+    params = [id]
+    result = Repo.query(sql_cmd, params)
+
+    case result do
+      {:ok, res} ->
+        data =
+          res.rows
+          |> Enum.map(fn [
+            email,
+            birth_date,
+            full_name,
+            gender,
+            phone_number
+          ] ->
+            %{
+              email: email,
+              birthDate: birth_date,
+              fullName: full_name,
+              gender: gender,
+              phoneNumber: phone_number
+            }
+          end)
+        {:ok, data}
+      {:error, error} ->
+        {:error, "Query error: " <> error.postgres.message}
+
+      _ ->
+        {:error, "Something went wrong"}
+    end
+
+  end
 end

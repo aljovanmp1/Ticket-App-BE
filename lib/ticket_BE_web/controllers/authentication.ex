@@ -1,7 +1,7 @@
 defmodule Ticket_BEWeb.Authentication do
   use Ticket_BEWeb, :controller
   alias Ticket_BE.Users
-  use Guardian, otp_app: :ticket_be
+  alias Ticket_BE.User
 
   def sign_up(conn, params) do
     try do
@@ -35,19 +35,18 @@ defmodule Ticket_BEWeb.Authentication do
 
   def sign_in(conn, params)do
     try do
-      case Users.get_user_by_email_pwd(
+      case Ticket_BE.Guardian.authenticate(
         params["email"],
         params["password"]
       ) do
-        {:ok, data} ->
-          {:ok, token, _claims} = Guardian.encode_and_sign(data)
+        {:ok, token, _payload} ->
           conn
           |> put_status(:ok)
           |> json(%{data: %{
             token: token
           }, message: "success"})
 
-        {:error, msg} ->
+          {:error, msg} ->
           conn
           |> put_status(:internal_server_error)
           |> json(%{data: [], errors: [msg]})

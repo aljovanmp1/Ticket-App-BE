@@ -11,21 +11,18 @@ config :ticket_BE,
   ecto_repos: [Ticket_BE.Repo],
   generators: [timestamp_type: :utc_datetime]
 
-config :guardian, Guardian,
+config :ticket_BE, Ticket_BE.Guardian,
   issuer: "ticket_BE",
-  secret_key: System.get_env("SECRET_KEY") || "this-is-a-secret-key_8Basd12Oasdk123Lasdasdasd",
-  serializer: Ticket_BE.GuardianSerializer,
-  allowed_algos: ["HS512"], # optional
-  verify_module: Guardian.JWT,  # optional
-  issuer: "Ticket_BE", # optional
-  ttl: { 1, :days },
-  allowed_drift: 2000,
-  verify_issuer: true # optional
+  secret_key: "J/y/ZuK+jn7RFrXsl06ZQGqEeahxwW1qxWyN7CU+FY2GBtO1WH7amDjLhhR0s5eB",
+  # secret_key: System.get_env("SECRET_KEY") || "this-is-a-secret-key_8Basd12Oasdk123Lasdasdasd"
+  # serializer: Ticket_BE.GuardianSerializer,
+  allowed_algos: ["HS512"] # optional
+  # verify_module: Guardian.JWT,  # optional
+  # issuer: "Ticket_BE", # optional
+  # # ttl: { 1, :days },
+  # allowed_drift: 2000,
+  # verify_issuer: true # optional
 
-
-config :ticket_BE, MyAppWeb.Guardian,
-  issuer: "my_app",
-  secret_key: "your_secret_key"
 # Configures the endpoint
 config :ticket_BE, Ticket_BEWeb.Endpoint,
   url: [host: "localhost"],

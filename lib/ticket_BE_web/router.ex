@@ -5,14 +5,26 @@ defmodule Ticket_BEWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :auth do
+    plug Ticket_BEWeb.GuardianPipeline
+  end
+
   scope "/api", Ticket_BEWeb do
     pipe_through :api
-    get "/", LandingPage, :index
-    get "/flight/airports", Flight, :get_airport
-    get "/flight/class", Flight, :get_flight_class
-    post "/flight/tickets", Flight, :get_ticket
-    post "/auth/signup", Authentication, :sign_up
-    post "/auth/signin", Authentication, :sign_in
+
+    scope "/public" do
+      get "/", LandingPage, :index
+      get "/flight/airports", Flight, :get_airport
+      get "/flight/class", Flight, :get_flight_class
+      post "/flight/tickets", Flight, :get_ticket
+      post "/auth/signup", Authentication, :sign_up
+      post "/auth/signin", Authentication, :sign_in
+    end
+
+    scope "/private" do
+      pipe_through [:auth]
+      get "/users/profile", UserProfile, :get_profile
+    end
   end
 
   # Enable LiveDashboard in development

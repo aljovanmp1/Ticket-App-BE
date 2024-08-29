@@ -10,7 +10,7 @@ defmodule Ticket_BEWeb.Flight do
       classes = FlightClasses.list_classes()
       # IO.inspect(classes)
       conn
-      |> put_status(:internal_server_error)
+      |> put_status(:ok)
       |> json(%{data: classes})
     catch
       exception ->
